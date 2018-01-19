@@ -1,0 +1,20 @@
+{
+    "name": "graphql-trial",
+    "version": "0.0.1",
+    "description": "Playground to try out GraphQL",
+    "dependencies": {
+        "express": "^4.10.2",
+        "express-graphql": "^0.6.11",
+        "graphql": "^0.10.0"
+    },
+    "main": "backend/server.js",
+    "scripts": {
+        "start": "node backend/server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Zekzek/graphql-trial.git"
+    },
+    "author": "Al Bueche IV <albert.bueche.iv@gmail.com>",
+    "license": "MIT"
+}
