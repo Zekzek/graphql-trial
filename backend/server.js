@@ -9,19 +9,41 @@ var app = express();
 var fs = require('fs'); //File system manager
 
 //Load flexible database interface
-var graphqlHTTP = require('express-graphql');
-var { buildSchema } = require('graphql');
+var graphql = require('graphql').graphql;
+var buildSchema = require('graphql').buildSchema;
+
+//Build up the database schema
 var schema = buildSchema(`
   type Query {
     hello: String
   }
 `);
+
+//Set up the database root
 var root = { hello: () => 'Hello world!' };
-app.use('/graphql', graphqlHTTP({
-    schema: schema,
-    rootValue: root,
-    graphiql: true
-}));
+
+//make a request
+graphql(schema, '{ hello }', root).then((response) => {
+    console.log(response);
+});
+
+//graphql('', '{ hello }', root);
+
+//https://github.com/RisingStack/graphql-server/blob/master/src/server/server.js
+
+//var graphqlHTTP = require('express-graphql');
+//var buildSchema = require('graphql');
+//var schema = buildSchema(`
+//  type Query {
+//    hello: String
+//  }
+//`);
+//var root = { hello: () => 'Hello world!' };
+//app.use('/graphql', graphqlHTTP({
+//    schema: schema,
+//    rootValue: root,
+//    graphiql: true
+//}));
 
 //Make an http web server
 var http = require('http').createServer(app);
