@@ -5,19 +5,17 @@ var securePort = 8443;
 var express = require('express');
 var app = express();
 
-//Load file system manager
-var fs = require('fs'); //File system manager
-
 //Make an http web server
 var http = require('http').createServer(app);
 
 //Load ssl keys and make an https web server
+var fs = require('fs'); //File system manager
 var privateKey = fs.readFileSync('sslcert/nopass.key', 'utf8');
 var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 var credentials = { key: privateKey, cert: certificate };
 var https = require('https').createServer(credentials, app);
 
-//Real-time bi-directional event-based communication
+//Real-time, bi-directional, event-based communication
 var io = require('socket.io')(http);
 var sio = require('socket.io')(https);
 
