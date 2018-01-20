@@ -8,43 +8,6 @@ var app = express();
 //Load file system manager
 var fs = require('fs'); //File system manager
 
-//Load flexible database interface
-var graphql = require('graphql').graphql;
-var buildSchema = require('graphql').buildSchema;
-
-//Build up the database schema
-var schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
-
-//Set up the database root
-var root = { hello: () => 'Hello world!' };
-
-//make a request
-graphql(schema, '{ hello }', root).then((response) => {
-    console.log(response);
-});
-
-//graphql('', '{ hello }', root);
-
-//https://github.com/RisingStack/graphql-server/blob/master/src/server/server.js
-
-//var graphqlHTTP = require('express-graphql');
-//var buildSchema = require('graphql');
-//var schema = buildSchema(`
-//  type Query {
-//    hello: String
-//  }
-//`);
-//var root = { hello: () => 'Hello world!' };
-//app.use('/graphql', graphqlHTTP({
-//    schema: schema,
-//    rootValue: root,
-//    graphiql: true
-//}));
-
 //Make an http web server
 var http = require('http').createServer(app);
 
@@ -53,6 +16,15 @@ var privateKey = fs.readFileSync('sslcert/nopass.key', 'utf8');
 var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 var credentials = { key: privateKey, cert: certificate };
 var https = require('https').createServer(credentials, app);
+
+//Real-time bi-directional event-based communication
+var io = require('socket.io')(http);
+var sio = require('socket.io')(https);
+
+//Let database handle its own messaging
+var database = require('./database.js');
+database.bindIo(io);
+database.bindSio(sio);
 
 //Serve all static files in the 'frontend' folder
 app.use(express.static('frontend'));
